@@ -1,0 +1,29 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<a href="{% url 'event_detail' event.id %}">← Back to Event</a>
+<br><br>
+
+<div class="card">
+    <h1>Register for {{ event.title }}</h1>
+    <br>
+
+    {% if error %}
+    <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <label>Your Name:</label>
+        <input type="text" name="name" required>
+
+        <label>Your Email:</label>
+        <input type="email" name="email" required>
+
+        <br>
+        <button type="submit" class="btn">Confirm Registration</button>
+    </form>
+</div>
+{% endblock %}

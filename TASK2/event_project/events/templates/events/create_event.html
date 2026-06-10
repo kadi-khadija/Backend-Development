@@ -1,0 +1,35 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Create Event{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 30px auto;">
+    <h1>Create New Event</h1>
+    <br>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Event Title:</label>
+        <input type="text" name="title" required>
+
+        <label>Description:</label>
+        <textarea name="description" rows="4" required
+            style="width:100%; padding:10px; border:2px solid #ddd; border-radius:6px; font-size:14px; margin-bottom:10px; box-sizing:border-box; font-family:inherit; resize:vertical;"></textarea>
+
+        <label>Date & Time:</label>
+        <input type="datetime-local" name="date" required
+            style="width:100%; padding:10px; border:2px solid #ddd; border-radius:6px; font-size:14px; margin-bottom:10px; box-sizing:border-box;">
+
+        <label>Location:</label>
+        <input type="text" name="location" required>
+
+        <label>Capacity:</label>
+        <input type="number" name="capacity" min="1" required>
+
+        <br><br>
+        <button type="submit" class="btn">Create Event</button>
+        <a href="/" class="btn" style="background: #888; text-decoration: none; margin-left: 10px;">Cancel</a>
+    </form>
+</div>
+{% endblock %}

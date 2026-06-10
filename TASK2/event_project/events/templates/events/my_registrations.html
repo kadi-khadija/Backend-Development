@@ -1,0 +1,39 @@
+{% extends 'events/base.html' %}
+
+{% block title %}My Registrations{% endblock %}
+
+{% block content %}
+<h1>My Registrations</h1>
+<br>
+
+<div class="search-box">
+    <form method="GET">
+        <input type="email" name="email" placeholder="Search by email..." value="{{ email }}">
+        <button type="submit" class="btn">Search</button>
+    </form>
+</div>
+
+{% if registrations %}
+<div class="card">
+    <table>
+        <tr><th>Event</th><th>Name</th><th>Email</th><th>Date</th><th>Action</th></tr>
+        {% for reg in registrations %}
+        <tr>
+            <td><a href="{% url 'event_detail' reg.event.id %}">{{ reg.event.title }}</a></td>
+            <td>{{ reg.name }}</td>
+            <td>{{ reg.email }}</td>
+            <td class="meta">{{ reg.registered_at|date:"M j, Y" }}</td>
+            <td>
+                <a href="{% url 'cancel_registration' reg.id %}" class="btn btn-danger btn-sm"
+                   onclick="return confirm('Cancel this registration?')">Cancel</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% elif email %}
+<p>No registrations found for {{ email }}.</p>
+{% else %}
+<p>Enter your email to find your registrations.</p>
+{% endif %}
+{% endblock %}

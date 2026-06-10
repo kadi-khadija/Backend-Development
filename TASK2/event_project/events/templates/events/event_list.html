@@ -1,0 +1,26 @@
+{% extends 'events/base.html' %}
+
+{% block title %}All Events{% endblock %}
+
+{% block content %}
+<h1>Upcoming Events</h1>
+<br>
+
+{% for event in events %}
+<div class="card">
+    <h2>{{ event.title }}</h2>
+    <p class="meta"> {{ event.date|date:"F j, Y, g:i a" }} &nbsp;|&nbsp; 📍 {{ event.location }}</p>
+    <p>{{ event.description }}</p>
+    <br>
+    <a href="{% url 'event_detail' event.id %}" class="btn">View Details</a>
+</div>
+{% empty %}
+<p>No events yet.
+    {% if user.is_authenticated %}
+        <a href="{% url 'create_event' %}">Create your first event!</a>
+    {% else %}
+        <a href="{% url 'login' %}">Login to create an event.</a>
+    {% endif %}
+</p>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Events{% endblock %} - CodeAlpha</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f0f2f5; color: #333; }
+        .navbar {
+            background: #4f46e5; color: white; padding: 15px 30px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .navbar a { color: white; text-decoration: none; margin-left: 20px; }
+        .navbar a:hover { text-decoration: underline; }
+        .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+        .card {
+            background: white; border-radius: 8px; padding: 25px;
+            margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .btn {
+            display: inline-block; padding: 8px 20px; background: #4f46e5;
+            color: white; text-decoration: none; border-radius: 6px; border: none;
+            cursor: pointer; font-size: 14px;
+        }
+        .btn:hover { background: #4338ca; }
+        .btn-danger { background: #dc2626; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-sm { padding: 5px 12px; font-size: 12px; }
+        .error { color: #dc2626; margin-bottom: 15px; }
+        .success { color: #16a34a; margin-bottom: 15px; }
+        .meta { color: #888; font-size: 13px; }
+        .spots { color: #16a34a; font-weight: bold; }
+        .full { color: #dc2626; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; }
+        th { color: #888; font-size: 13px; }
+        input[type="text"], input[type="email"] {
+            width: 100%; padding: 10px; border: 2px solid #ddd;
+            border-radius: 6px; font-size: 14px; margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        input:focus { border-color: #4f46e5; outline: none; }
+        .search-box { margin-bottom: 20px; }
+        .search-box input { max-width: 400px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+    <strong>CodeAlpha Events</strong>
+        <div>
+            <a href="/">Events</a>
+            <a href="/my-registrations/">My Registrations</a>
+            {% if user.is_authenticated %}
+                <a href="/create-event/">+ Create Event</a>
+                <span style="color: #c7d2fe;">Hi, {{ user.username }}</span>
+                <a href="/logout/" style="color: #fca5a5;">Logout</a>
+            {% else %}
+                <a href="/login/">Login</a>
+                <a href="/signup/">Sign Up</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

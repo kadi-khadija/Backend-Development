@@ -1,0 +1,40 @@
+{% extends 'events/base.html' %}
+
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block content %}
+<a href="/">← Back to Events</a>
+<br><br>
+
+<div class="card">
+    <h1>{{ event.title }}</h1>
+    <p class="meta">📅 {{ event.date|date:"F j, Y, g:i a" }}</p>
+    <p class="meta">📍 {{ event.location }}</p>
+    <p class="meta">👥 Capacity: {{ event.capacity }}</p>
+    <p style="margin-top:15px;">{{ event.description }}</p>
+    <br>
+
+    {% if spots_left > 0 %}
+        <p class="spots">{{ spots_left }} spots left</p>
+        <a href="{% url 'register' event.id %}" class="btn">Register Now</a>
+    {% else %}
+        <p class="full">Event is full!</p>
+    {% endif %}
+</div>
+
+{% if registrations %}
+<div class="card">
+    <h3>Registrations ({{ registrations.count }})</h3>
+    <table>
+        <tr><th>Name</th><th>Email</th><th>Date</th></tr>
+        {% for reg in registrations %}
+        <tr>
+            <td>{{ reg.name }}</td>
+            <td>{{ reg.email }}</td>
+            <td class="meta">{{ reg.registered_at|date:"M j, Y" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endif %}
+{% endblock %}
