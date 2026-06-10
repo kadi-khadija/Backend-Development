@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Management - CodeAlpha</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="navbar">
+    <h1>CodeAlpha Restaurant</h1>
+    <div class="links">
+        <a href="#" onclick="showSection('dashboard')">Dashboard</a>
+        <a href="#" onclick="showSection('menu')">Menu</a>
+        <a href="#" onclick="showSection('orders')">Orders</a>
+        <a href="#" onclick="showSection('tables')">Tables</a>
+        <a href="#" onclick="showSection('reservations')">Reservations</a>
+        <a href="#" onclick="showSection('inventory')">Inventory</a>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active" onclick="showSection('dashboard')">Dashboard</div>
+        <div class="tab" onclick="showSection('menu')">Menu</div>
+        <div class="tab" onclick="showSection('orders')">Orders</div>
+        <div class="tab" onclick="showSection('tables')">Tables</div>
+        <div class="tab" onclick="showSection('reservations')">Reservations</div>
+        <div class="tab" onclick="showSection('inventory')">Inventory</div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+        <!-- ===== DASHBOARD ===== -->
+        <div id="dashboard" class="section active">
+            <div class="section-header"><h2>Dashboard</h2></div>
+            <div class="grid-3" style="margin-bottom: 25px;">
+                <div class="stat-card">
+                    <div class="number" id="stat-menu">0</div>
+                    <div class="label">Menu Items</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="stat-orders">0</div>
+                    <div class="label">Orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="stat-tables">0</div>
+                    <div class="label">Available Tables</div>
+                </div>
+            </div>
+            <h3>Recent Orders</h3>
+            <br>
+            <table>
+                <tr><th>ID</th><th>Table</th><th>Items</th><th>Total</th><th>Status</th><th>Actions</th></tr>
+                <tbody id="dashboard-orders"><tr><td colspan="6" style="text-align:center;color:#888;">Loading...</td></tr></tbody>
+            </table>
+        </div>
+
+        <!-- ===== MENU ===== -->
+        <div id="menu" class="section">
+            <div class="section-header">
+                <h2>Menu</h2>
+                <button class="btn" onclick="toggleMenuForm()">+ Add Item</button>
+            </div>
+            <div id="menu-form" class="card" style="display:none; margin-bottom: 20px;">
+                <h3>Add Menu Item</h3><br>
+                <div class="form-row">
+                    <div class="form-group"><label>Name</label><input type="text" id="menu-name" placeholder="Pizza"></div>
+                    <div class="form-group"><label>Price</label><input type="number" id="menu-price" step="0.01" placeholder="12.50"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Category</label>
+                        <select id="menu-category"><option>Main</option><option>Appetizer</option><option>Drink</option><option>Dessert</option></select>
+                    </div>
+                    <div class="form-group"><label>Description</label><input type="text" id="menu-desc" placeholder="Delicious margherita"></div>
+                </div>
+                <button class="btn btn-success" onclick="addMenuItem()">Add to Menu</button>
+            </div>
+            <div class="grid-3" id="menu-grid"></div>
+        </div>
+
+        <!-- ===== ORDERS ===== -->
+        <div id="orders" class="section">
+            <div class="section-header">
+                <h2>Orders</h2>
+                <button class="btn" onclick="toggleOrderForm()">+ New Order</button>
+            </div>
+            <div id="order-form" class="card" style="display:none; margin-bottom: 20px;">
+                <h3>Place New Order</h3><br>
+                <div class="form-row">
+                    <div class="form-group"><label>Table</label><select id="order-table"></select></div>
+                    <div class="form-group"><label>Menu Item</label><select id="order-item"></select></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Quantity</label><input type="number" id="order-qty" value="1" min="1"></div>
+                    <div class="form-group" style="display:flex; align-items:end;">
+                        <button class="btn btn-success" onclick="placeOrder()" style="width:100%;">Place Order</button>
+                    </div>
+                </div>
+            </div>
+            <table>
+                <tr><th>ID</th><th>Table</th><th>Items</th><th>Total</th><th>Status</th><th>Update</th></tr>
+                <tbody id="orders-tbody"></tbody>
+            </table>
+        </div>
+
+        <!-- ===== TABLES ===== -->
+        <div id="tables" class="section">
+            <div class="section-header">
+                <h2>Tables</h2>
+                <button class="btn" onclick="toggleTableForm()">+ Add Table</button>
+            </div>
+            <div id="table-form" class="card" style="display:none; margin-bottom: 20px;">
+                <h3>Add Table</h3><br>
+                <div class="form-row">
+                    <div class="form-group"><label>Table Number</label><input type="number" id="table-num" min="1"></div>
+                    <div class="form-group"><label>Capacity</label><input type="number" id="table-cap" min="1" value="4"></div>
+                </div>
+                <button class="btn btn-success" onclick="addTable()">Add Table</button>
+            </div>
+            <div class="grid-3" id="tables-grid"></div>
+        </div>
+
+        <!-- ===== RESERVATIONS ===== -->
+        <div id="reservations" class="section">
+            <div class="section-header">
+                <h2>Reservations</h2>
+                <button class="btn" onclick="toggleReservationForm()">+ New Reservation</button>
+            </div>
+            <div id="reservation-form" class="card" style="display:none; margin-bottom: 20px;">
+                <h3>Make Reservation</h3><br>
+                <div class="form-row">
+                    <div class="form-group"><label>Customer Name</label><input type="text" id="res-name"></div>
+                    <div class="form-group"><label>Phone</label><input type="text" id="res-phone"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Table</label><select id="res-table"></select></div>
+                    <div class="form-group"><label>Guests</label><input type="number" id="res-guests" min="1" value="2"></div>
+                </div>
+                <div class="form-group"><label>Date & Time</label><input type="datetime-local" id="res-time"></div>
+                <button class="btn btn-success" onclick="makeReservation()">Confirm Reservation</button>
+            </div>
+            <table>
+                <tr><th>ID</th><th>Customer</th><th>Phone</th><th>Table</th><th>Guests</th><th>Time</th><th>Action</th></tr>
+                <tbody id="reservations-tbody"></tbody>
+            </table>
+        </div>
+
+        <!-- ===== INVENTORY ===== -->
+        <div id="inventory" class="section">
+            <div class="section-header">
+                <h2>Inventory</h2>
+                <button class="btn" onclick="toggleInventoryForm()">+ Add Stock</button>
+            </div>
+            <div id="inventory-form" class="card" style="display:none; margin-bottom: 20px;">
+                <h3>Add / Restock Item</h3><br>
+                <div class="form-row">
+                    <div class="form-group"><label>Ingredient Name</label><input type="text" id="inv-name" placeholder="Tomato"></div>
+                    <div class="form-group"><label>Quantity</label><input type="number" id="inv-qty" min="1"></div>
+                </div>
+                <div class="form-group"><label>Unit</label>
+                    <select id="inv-unit"><option>kg</option><option>liters</option><option>units</option><option>boxes</option></select>
+                </div>
+                <button class="btn btn-success" onclick="addInventory()">Add Stock</button>
+            </div>
+            <table>
+                <tr><th>ID</th><th>Ingredient</th><th>Quantity</th><th>Unit</th></tr>
+                <tbody id="inventory-tbody"></tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script>
+const API = '';
+
+// --- Tab navigation ---
+function showSection(name) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(name).classList.add('active');
+    event.target.classList.add('active');
+    if (name === 'dashboard') loadDashboard();
+    if (name === 'menu') loadMenu();
+    if (name === 'orders') loadOrders();
+    if (name === 'tables') loadTables();
+    if (name === 'reservations') loadReservations();
+    if (name === 'inventory') loadInventory();
+}
+
+// --- Toggle forms ---
+function toggleMenuForm() { document.getElementById('menu-form').style.display = document.getElementById('menu-form').style.display === 'none' ? 'block' : 'none'; }
+function toggleOrderForm() { loadOrderFormOptions(); document.getElementById('order-form').style.display = document.getElementById('order-form').style.display === 'none' ? 'block' : 'none'; }
+function toggleTableForm() { document.getElementById('table-form').style.display = document.getElementById('table-form').style.display === 'none' ? 'block' : 'none'; }
+function toggleReservationForm() { loadReservationTableOptions(); document.getElementById('reservation-form').style.display = document.getElementById('reservation-form').style.display === 'none' ? 'block' : 'none'; }
+function toggleInventoryForm() { document.getElementById('inventory-form').style.display = document.getElementById('inventory-form').style.display === 'none' ? 'block' : 'none'; }
+
+// --- API calls ---
+async function api(url, options = {}) {
+    try {
+        const res = await fetch(API + url, {
+            headers: { 'Content-Type': 'application/json' },
+            ...options
+        });
+        return await res.json();
+    } catch (err) {
+        console.error('API error:', err);
+        return null;
+    }
+}
+
+// --- Status badge ---
+function statusBadge(status) {
+    return `<span class="badge badge-${status}">${status}</span>`;
+}
+
+// --- DASHBOARD ---
+async function loadDashboard() {
+    const menu = await api('/api/menu');
+    const orders = await api('/api/orders');
+    const tables = await api('/api/tables/available');
+
+    document.getElementById('stat-menu').textContent = menu ? menu.length : 0;
+    document.getElementById('stat-orders').textContent = orders ? orders.length : 0;
+    document.getElementById('stat-tables').textContent = tables ? tables.length : 0;
+
+    const tbody = document.getElementById('dashboard-orders');
+    if (!orders || orders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#888;">No orders yet.</td></tr>';
+        return;
+    }
+    tbody.innerHTML = orders.slice(0, 5).map(o => `
+        <tr>
+            <td>#${o.id}</td>
+            <td>Table ${o.table_number || '-'}</td>
+            <td>${o.items ? o.items.map(i => i.name + ' x' + i.quantity).join(', ') : '-'}</td>
+            <td><strong>$${o.total_price.toFixed(2)}</strong></td>
+            <td>${statusBadge(o.status)}</td>
+            <td>
+                ${o.status === 'pending' ? `<button class="btn btn-sm btn-warning" onclick="updateOrderStatus(${o.id},'preparing')">Start</button>` : ''}
+                ${o.status === 'preparing' ? `<button class="btn btn-sm btn-success" onclick="updateOrderStatus(${o.id},'ready')">Ready</button>` : ''}
+                ${o.status === 'ready' ? `<button class="btn btn-sm" onclick="updateOrderStatus(${o.id},'served')">Served</button>` : ''}
+            </td>
+        </tr>
+    `).join('');
+}
+
+// --- MENU ---
+async function loadMenu() {
+    const items = await api('/api/menu');
+    const grid = document.getElementById('menu-grid');
+    if (!items || items.length === 0) {
+        grid.innerHTML = '<p style="color:#888; grid-column:1/-1;">No menu items yet. Add one!</p>';
+        return;
+    }
+    grid.innerHTML = items.map(item => `
+        <div class="card">
+            <h3>${item.name}</h3>
+            <div class="meta">${item.category} &bull; ${item.description || ''}</div>
+            <div class="price">$${item.price.toFixed(2)}</div>
+        </div>
+    `).join('');
+}
+
+async function addMenuItem() {
+    const name = document.getElementById('menu-name').value;
+    const price = parseFloat(document.getElementById('menu-price').value);
+    const category = document.getElementById('menu-category').value;
+    const description = document.getElementById('menu-desc').value;
+
+    if (!name || !price) return alert('Name and price are required.');
+
+    await api('/api/menu', {
+        method: 'POST',
+        body: JSON.stringify({ name, price, category, description })
+    });
+
+    document.getElementById('menu-name').value = '';
+    document.getElementById('menu-price').value = '';
+    document.getElementById('menu-desc').value = '';
+    toggleMenuForm();
+    loadMenu();
+}
+
+// --- ORDERS ---
+async function loadOrders() {
+    const orders = await api('/api/orders');
+    const tbody = document.getElementById('orders-tbody');
+    if (!orders || orders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#888;">No orders yet.</td></tr>';
+        return;
+    }
+    tbody.innerHTML = orders.map(o => `
+        <tr>
+            <td>#${o.id}</td>
+            <td>Table ${o.table_number || '-'}</td>
+            <td>${o.items ? o.items.map(i => i.name + ' x' + i.quantity).join(', ') : '-'}</td>
+            <td><strong>$${o.total_price.toFixed(2)}</strong></td>
+            <td>${statusBadge(o.status)}</td>
+            <td>
+                ${o.status === 'pending' ? `<button class="btn btn-sm btn-warning" onclick="updateOrderStatus(${o.id},'preparing')">Prepare</button>` : ''}
+                ${o.status === 'preparing' ? `<button class="btn btn-sm btn-success" onclick="updateOrderStatus(${o.id},'ready')">Ready</button>` : ''}
+                ${o.status === 'ready' ? `<button class="btn btn-sm" onclick="updateOrderStatus(${o.id},'served')">Served</button>` : ''}
+                ${o.status !== 'cancelled' && o.status !== 'served' ? `<button class="btn btn-sm btn-danger" onclick="updateOrderStatus(${o.id},'cancelled')">Cancel</button>` : ''}
+            </td>
+        </tr>
+    `).join('');
+}
+
+async function loadOrderFormOptions() {
+    const tables = await api('/api/tables/available');
+    const menu = await api('/api/menu');
+    document.getElementById('order-table').innerHTML = tables.map(t => `<option value="${t.id}">Table ${t.table_number} (${t.capacity} seats)</option>`).join('');
+    document.getElementById('order-item').innerHTML = menu.map(m => `<option value="${m.id}">${m.name} - $${m.price.toFixed(2)}</option>`).join('');
+}
+
+async function placeOrder() {
+    const table_id = parseInt(document.getElementById('order-table').value);
+    const menu_item_id = parseInt(document.getElementById('order-item').value);
+    const quantity = parseInt(document.getElementById('order-qty').value);
+
+    await api('/api/orders', {
+        method: 'POST',
+        body: JSON.stringify({ table_id, items: [{ menu_item_id, quantity }] })
+    });
+
+    toggleOrderForm();
+    loadOrders();
+}
+
+async function updateOrderStatus(id, status) {
+    await api(`/api/orders/${id}/status`, {
+        method: 'PUT',
+        body: JSON.stringify({ status })
+    });
+    loadOrders();
+    loadDashboard();
+}
+
+// --- TABLES ---
+async function loadTables() {
+    const tables = await api('/api/tables');
+    const grid = document.getElementById('tables-grid');
+    if (!tables || tables.length === 0) {
+        grid.innerHTML = '<p style="color:#888; grid-column:1/-1;">No tables yet. Add one!</p>';
+        return;
+    }
+    grid.innerHTML = tables.map(t => `
+        <div class="card" style="text-align:center;">
+            <h3 style="font-size:28px;">Table ${t.table_number}</h3>
+            <div class="meta">${t.capacity} seats</div>
+            <br>
+            <span class="badge ${t.is_reserved ? 'badge-reserved' : 'badge-available'}">${t.is_reserved ? 'Reserved' : 'Available'}</span>
+        </div>
+    `).join('');
+}
+
+async function addTable() {
+    const table_number = parseInt(document.getElementById('table-num').value);
+    const capacity = parseInt(document.getElementById('table-cap').value);
+
+    await api('/api/tables', {
+        method: 'POST',
+        body: JSON.stringify({ table_number, capacity })
+    });
+
+    document.getElementById('table-num').value = '';
+    toggleTableForm();
+    loadTables();
+}
+
+// --- RESERVATIONS ---
+async function loadReservations() {
+    const reservations = await api('/api/reservations');
+    const tbody = document.getElementById('reservations-tbody');
+    if (!reservations || reservations.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#888;">No reservations yet.</td></tr>';
+        return;
+    }
+    tbody.innerHTML = reservations.map(r => `
+        <tr>
+            <td>#${r.id}</td>
+            <td>${r.customer_name}</td>
+            <td>${r.customer_phone}</td>
+            <td>Table ${r.table_number}</td>
+            <td>${r.guests}</td>
+            <td>${r.reservation_time}</td>
+            <td><button class="btn btn-sm btn-danger" onclick="cancelReservation(${r.id})">Cancel</button></td>
+        </tr>
+    `).join('');
+}
+
+async function loadReservationTableOptions() {
+    const tables = await api('/api/tables/available');
+    document.getElementById('res-table').innerHTML = tables.map(t => `<option value="${t.id}">Table ${t.table_number} (${t.capacity} seats)</option>`).join('');
+}
+
+async function makeReservation() {
+    const table_id = parseInt(document.getElementById('res-table').value);
+    const customer_name = document.getElementById('res-name').value;
+    const customer_phone = document.getElementById('res-phone').value;
+    const guests = parseInt(document.getElementById('res-guests').value);
+    const reservation_time = document.getElementById('res-time').value;
+
+    if (!customer_name || !customer_phone || !reservation_time) return alert('All fields are required.');
+
+    await api('/api/reservations', {
+        method: 'POST',
+        body: JSON.stringify({ table_id, customer_name, customer_phone, reservation_time, guests })
+    });
+
+    toggleReservationForm();
+    loadReservations();
+}
+
+async function cancelReservation(id) {
+    await api(`/api/reservations/${id}`, { method: 'DELETE' });
+    loadReservations();
+}
+
+// --- INVENTORY ---
+async function loadInventory() {
+    const items = await api('/api/inventory');
+    const tbody = document.getElementById('inventory-tbody');
+    if (!items || items.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#888;">No inventory items yet.</td></tr>';
+        return;
+    }
+    tbody.innerHTML = items.map(i => `
+        <tr>
+            <td>${i.id}</td>
+            <td>${i.ingredient_name}</td>
+            <td style="color: ${i.quantity < 10 ? '#dc2626' : '#333'}; font-weight: ${i.quantity < 10 ? 'bold' : 'normal'};">
+                ${i.quantity} ${i.unit} ${i.quantity < 10 ? '(LOW!)' : ''}
+            </td>
+            <td>${i.unit}</td>
+        </tr>
+    `).join('');
+}
+
+async function addInventory() {
+    const ingredient_name = document.getElementById('inv-name').value;
+    const quantity = parseInt(document.getElementById('inv-qty').value);
+    const unit = document.getElementById('inv-unit').value;
+
+    if (!ingredient_name || !quantity) return alert('Name and quantity are required.');
+
+    await api('/api/inventory', {
+        method: 'POST',
+        body: JSON.stringify({ ingredient_name, quantity, unit })
+    });
+
+    document.getElementById('inv-name').value = '';
+    document.getElementById('inv-qty').value = '';
+    toggleInventoryForm();
+    loadInventory();
+}
+
+// --- Load dashboard on start ---
+loadDashboard();
+</script>
+
+</body>
+</html>
